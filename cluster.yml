@@ -1,0 +1,29 @@
+---
+# Install yum-repo
+- hosts: haproxy_host
+  roles:
+    - role: yum-repo
+      when: ansible_os_family == "CentOS"
+  tags:
+    - yum-repo
+
+# Install os runtime
+- hosts: haproxy_host
+  roles:
+    - { role: runtime-env }
+  tags:
+    - runtime
+
+# install haproxy
+- hosts: haproxy_host
+  roles:
+    - { role: haproxy, when: haproxy.enabled }
+  tags:
+    - haproxy
+
+# install keepalived
+- hosts: haproxy_host
+  roles:
+    - { role: keepalived, when: keepalived.enabled }
+  tags:
+    - keepalived

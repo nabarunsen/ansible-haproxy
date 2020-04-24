@@ -1,0 +1,13 @@
+---
+- name: Disable selinux
+  selinux:
+    state: disabled
+  when: ansible_os_family == "CentOS"
+
+- name: Disable selinux in config file
+  lineinfile:
+    dest: /etc/selinux/config
+    state: present
+    regexp: '^SELINUX='
+    line: 'SELINUX=disabled'
+  when: ansible_os_family == "CentOS"

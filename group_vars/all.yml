@@ -1,0 +1,24 @@
+# Use keepalived for API HA. If there is only one master node, then set 'enabled' to false.
+
+keepalived:
+  enabled: true
+  interface: eth1
+  shared_ip: 172.42.42.10		# Virtual IP
+  vrid: 110			# Virtual Router ID
+  adv_interval: 1		# VRRP advert interval
+  authtype: PASS		# 'PASS' (simple password) or 'AH' (IPSEC)
+  password: k8s@123		# password for accessing VRRP
+
+# Setup haproxy for Kubernetes API loadbalancing
+haproxy:
+  enabled: true                 # Set to false when already physical loadbalancer available
+  config_dir: /etc/haproxy
+  monitor_port: 9090
+  admin_user: admin
+  admin_password: admin123
+
+# kube-api server settings
+kube_api:
+  interface: eth1
+  secure_port: 6443
+  url: "https://{{ keepalived.shared_ip }}"             # Should be haproxy host IP or network load balancer IP. If you use only one api server then setup its IP.

@@ -1,0 +1,10 @@
+---
+- name: Install epel
+  when: ansible_os_family == "CentOS"
+  yum:
+    name: epel-release
+    state: latest
+    
+- name: Remove mirror fastest mirrors
+  when: ansible_os_family == "CentOS" and yum_proxy != ""
+  file: path=/etc/yum/pluginconf.d/fastestmirror.conf state=absent
